@@ -26,8 +26,6 @@
 - [Git](https://git-scm.com/downloads) 설치  
 - [VS Code](https://code.visualstudio.com/) 개발 환경  
 - 기본적인 Python 프로그래밍 지식  
-- Azure AI Foundry에서 모델 배포 및 [AI Search](https://learn.microsoft.com/en-us/azure/search/search-what-is-azure-search) 연결 구성 완료
-
 
 ---
 
