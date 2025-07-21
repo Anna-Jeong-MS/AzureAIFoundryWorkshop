@@ -14,6 +14,6 @@
 > **소요 시간**: 2시간  
 > **중점**: 실습 과제, 대화형 노트북, 실용적인 예제
 
-이 워크샵은 https://github.com/Azure/ai-foundry-workshop를 참고하여 재작성하였습니다.
+이 워크샵은 https://github.com/Azure/ai-foundry-workshop 를 참고하여 재작성하였습니다.
 
 
