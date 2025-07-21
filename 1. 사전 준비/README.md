@@ -3,7 +3,7 @@
 먼저 레포지토리를 복제합니다.
 
 ```bash
-git clone https://github.com/Azure/ai-foundry-workshop.git
+git clone https://github.com/Anna-Jeong-MS/AzureAIFoundryWorkshop.git
 ```
 
 **Python 3.10 또는 그 이상 버전의 설치가 필요합니다.**
