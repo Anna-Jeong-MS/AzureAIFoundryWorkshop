@@ -1,1 +1,19 @@
-# AzureAIFoundryWorkshop
+# Azure AI Foundry Workshop
+
+## 개요
+
+이 워크숍은 Azure AI Foundry를 기반으로 **지능형 애플리케이션과 AI 에이전트**를 구축하는 실습 중심의 과정을 제공합니다.  
+건강 및 식단 조언과 관련된 재미있는 예제를 통해 다음을 학습할 수 있습니다:
+
+- Azure AI Foundry의 기본 개념 이해  
+- 인증 및 프로젝트 설정 구성  
+- AI 모델 배포 및 테스트  
+- AI 에이전트 구축 (건강 조언 에이전트 예제)  
+- 에이전트 성능 평가 및 품질 속성 모니터링  
+
+> **소요 시간**: 2시간  
+> **중점**: 실습 과제, 대화형 노트북, 실용적인 예제
+
+이 워크샵은 https://github.com/Azure/ai-foundry-workshop를 참고하여 재작성하였습니다.
+
+
