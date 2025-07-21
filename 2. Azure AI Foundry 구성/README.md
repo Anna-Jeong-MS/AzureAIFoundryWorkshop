@@ -26,3 +26,12 @@
 4. 아래 내용을 확인하고 `Deploy` 버튼을 클릭합니다.
     
     ![image.png](./images/image%202.png)
+
+### 임베딩 모델 배포
+
+1. 위와 동일하게 `Model + endpoints`에서 `+ Deploy model` 버튼을 클릭합니다.
+2. 모델 리스트에서 `text-embedding-3-small`을 선택하고 `Confirm` 버튼을 클릭합니다.
+    
+    ![image.png](./images/image%203.png)
+    
+3. `Deploy` 버튼을 클릭하여 모델 배포를 완료합니다.

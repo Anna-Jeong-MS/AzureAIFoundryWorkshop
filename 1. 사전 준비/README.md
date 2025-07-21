@@ -41,3 +41,16 @@ git clone https://github.com/Azure/ai-foundry-workshop.git
     uv venv
     source .venv/bin/activate  # Windows: .venv\Scripts\activate
     ```
+
+4. 실습을 위해서 아래 패키지들을 설치합니다.
+
+    ```bash
+    # Install core Azure AI SDKs and Jupyter requirements
+    uv pip install azure-identity azure-ai-projects azure-ai-inference[opentelemetry] azure-search-documents azure-ai-evaluation azure-monitor-opentelemetry
+
+    # Install Jupyter requirements
+    uv pip install ipykernel jupyterlab notebook
+
+    # Register the kernel with Jupyter
+    python -m ipykernel install --user --name=.venv --display-name="Python (.venv)"
+    ```
