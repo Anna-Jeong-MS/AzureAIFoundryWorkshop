@@ -18,7 +18,7 @@ git clone https://github.com/Azure/ai-foundry-workshop.git
 1. 왼쪽 메뉴에서 `Extensions` 을 클릭합니다.
 2. `Python` 확장을 설치합니다.
     
-    ![image.png](image.png)
+    ![image.png](./images/image.png)
     
 3. 같은 방법으로 `Jupyter`, `Polyglot Notebooks` 확장을 설치합니다.
 
@@ -27,17 +27,17 @@ git clone https://github.com/Azure/ai-foundry-workshop.git
 1. VS Code 상단 메뉴의 Terminal > New Terminal을 클릭합니다.
 2. 하단 터미널에서 아래 명령어를 사용하여 `uv`를 설치합니다.
 
-```bash
-# Unix/Linux/macOS
-curl -LsSf https://astral.sh/uv/install.sh | sh
+    ```bash
+    # Unix/Linux/macOS
+    curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Windows (PowerShell)   
-powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
-```
+    # Windows (PowerShell)   
+    powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+    ```
 
-1. venv 환경을 만들고 활성화합니다.
+3. venv 환경을 만들고 활성화합니다.
 
-```bash
-uv venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
-```
+    ```bash
+    uv venv
+    source .venv/bin/activate  # Windows: .venv\Scripts\activate
+    ```
