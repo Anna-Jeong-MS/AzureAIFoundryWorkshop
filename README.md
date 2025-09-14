@@ -5,18 +5,9 @@
 
 ---
 
-## Agenda
-- 00:00–00:10 오리엔테이션
-- 00:10–00:55 [1] Azure AI Foundry 구성
-- 00:55–01:45 [2] 플레이그라운드 활용
-- 01:45–02:00 Q&A
-
----
-
 ## Prerequisites
 - Azure 구독 권한(리소스 그룹 Owner 수준)
 - Azure OpenAI 사용 승인 및 지원 리전
-- (권장) 최신 Azure CLI 로그인
 
 ---
 
