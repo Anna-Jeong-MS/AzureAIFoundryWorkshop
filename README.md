@@ -1,68 +1,63 @@
-# Azure AI Foundry Workshop (2h)
+# Azure AI Foundry Workshop
 
-본 워크샵은 **(1) Azure AI Foundry 구성**, **(2) 플레이그라운드 활용**에 **초점을 둡니다**.  
-**(3) 챗봇 생성**, **(4) 평가·모니터링**은 추후 추가할 예정입니다.
+이 워크샵은 **Azure AI Foundry**를 활용하여 실제 기업 환경에서 생성형 AI 애플리케이션을 어떻게 설계·구현·운영할 수 있는지를 엔드투엔드로 체험할 수 있도록 구성되었습니다.  
 
----
-
-## Prerequisites
-- Azure 구독 권한(리소스 그룹 Owner 수준)
-- Azure OpenAI 사용 승인 및 지원 리전
-
----
-
-## Quick Start
-1. 허브와 프로젝트를 생성합니다. *(Storage access: Identity-based 권장)*  
-2. **Connections**에 Azure OpenAI, Azure AI Search, Storage(`workspaceblobstore`)를 등록합니다.  
-3. RBAC을 최소 구성합니다.  
-   - 사용자 → Storage: `Storage Blob Data Contributor` (+ 선택 `Storage Blob Data Delegator`)  
-   - OpenAI(MI) → Search: `Search Service Contributor`, `Search Index Data Reader`  
-   - OpenAI(MI) → Storage: `Storage Blob Data Contributor`  
-   - Search(MI) → Storage: `Storage Blob Data Reader`  
-4. 모델(예: GPT-4o)을 배포하고 **Chat Playground**를 엽니다.  
-5. **Add data**로 파일/검색을 연동하고 샘플 프롬프트로 테스트합니다.
+참가자는 단순히 모델을 호출하는 수준을 넘어,  
+- 데이터를 연결하고 임베딩하여 검색 가능한 지식으로 만드는 과정,  
+- 사용자 조건에 따라 작동하는 **에이전트 설계와 구현**,  
+- 여러 에이전트를 연동하여 **멀티 에이전트 시나리오**를 구성하는 방법,  
+- 그리고 운영 단계에서 필수적인 **모니터링·평가 체계**까지 직접 실습하게 됩니다.  
 
 ---
 
-## 1) Azure AI Foundry 구성
-- 허브를 생성하고 프로젝트를 추가합니다.  
-- **Connections**에서 OpenAI / AI Search / Storage 연결 상태를 확인합니다.  
-- 각 리소스의 **System-assigned Managed Identity**를 활성화하고 상기 RBAC을 적용합니다.  
-- 네트워크 제한을 사용하는 경우 **신뢰할 수 있는 Microsoft 서비스 허용** 또는 **프라이빗 엔드포인트**를 구성합니다.
+### 1. Azure AI Foundry 기본 구성
+- Foundry **Hub** 및 **Project** 생성
+- Azure OpenAI, AI Search, Storage Blob, Application Insights 등 리소스 연결
+- **역할 기반 접근 제어(RBAC)** 및 네트워크 옵션 설정
+- 실습을 위한 샘플 데이터 업로드
+
+### 2. Playground 체험
+- 모델 배포 (예: GPT-4o, embedding 모델)
+- **Chat Playground**에서 파일 업로드, AI Search 인덱스 연결
+- 하이브리드 검색 + 벡터 검색 실습
+- 간단한 프롬프트 테스트를 통해 데이터 검색 품질 확인
+
+### 3. 첫 번째 에이전트 구현 – 사용자 프로필 추출
+- `user_card_credit_summary_sample.json` 임베딩 후 **CreditProfileAgent** 생성
+- 조건(연령대, VIP 등급, 연체 여부 등)에 맞는 사용자 **페르소나 JSON** 추출
+- 스키마 정의, 필드 검증, Playground 테스트
+
+### 4. 멀티 에이전트 구현 – 펀드 추천
+- `fund_products_for_embedding.json` 기반 **FundRecommendationAgent** 생성
+- **Connected Agents** 기능으로 CreditProfileAgent와 연계
+- 사용자 조건 → 펀드 속성 매핑 로직 설계
+- 추천 결과를 "사용자 요약 → 추천 펀드 목록 → 추천 사유" 형식으로 반환
+
+### 5. 모니터링 및 평가
+- **Application Insights**와 연동하여 로그/메트릭 수집
+- Foundry **Observability Dashboard**에서 성능·안정성 확인
+- KQL 쿼리로 traces / exceptions / dependencies 분석
+- **Evaluation 메뉴**에서 CSV/JSONL 데이터셋 기반 품질·안전성 평가 수행
+- Groundedness, Relevance, ToolCallAccuracy 등 주요 지표 확인
 
 ---
 
-## 2) 플레이그라운드 활용
-- **Deployments**에서 모델(gpt-4o 등)을 배포합니다.  
-- **Chat Playground → Add data**에서 다음을 설정합니다.  
-  - 데이터 원본: File upload(미리 보기) 또는 AI Search 인덱스  
-  - 인증: **System-assigned managed identity**  
-- 샘플 프롬프트 예시  
-  - 1,000만 원 12개월 정기예금(단리) vs 월복리의 **기본/우대금리** 비교표를 제시하고 **기준일·출처**를 명시합니다.  
-  - 50만 원×24개월 적금의 만기 수령액(우대 충족/미충족)을 계산하고 **중도해지 규정**을 요약합니다.
+## ⏱️ 권장 시간 배분 (총 3시간)
+
+- Foundry 구성 & Playground 체험: **50분**  
+- 첫 번째 에이전트 구현 (CreditProfileAgent): **40분**  
+- **휴식: 10분** ☕  
+- 멀티 에이전트 구현 (FundRecommendationAgent): **50분**  
+- 모니터링 및 평가 실습: **30분**  
 
 ---
 
-## 3) 첫번째 에이전트 구현해보기
-- **데이터 업로드 및 임베딩**
-  - `user_card_credit_summary_sample.json` 등의 샘플 데이터를 업로드하고 Azure AI Search 또는 유사한 검색 인덱스 서비스와 연결합니다.
-  - 업로드한 데이터를 벡터화(임베딩)하여 검색 가능한 상태로 준비합니다.
-
-- **프롬프트 예시**
-  - 40대 VIP 등급 코드 07인 회원들의 평균 이용한도와 일시상환론 금액을 알려주고, 라이프스테이지 분포를 보여줘.
-  - 최근 카드 발급 경과월이 5개월 이하이고 단기연체 여부(6M)가 1인 회원 정보를 찾아 요약해줘. 회원번호, 연령대, 이용한도, 연체 관련 필드만 표시해.
-  - 자녀성장기(1)와 자녀성장기(2) 단계에 있는 30대와 40대 회원들의 평균 이용한도를 비교하고, 한도가 높은 순으로 라이프스테이지·연령대 조합을 정렬해줘.
-
-## 4) 멀티 에이전트 구현해보기 *(추가 예정)*
-- 첫번째 에이전트로 타겟 페르소나 정보를 가져와 두번째 금융 상품 추천 에이전트로 컨텍스트를 넘겨 추천을 수행하는 멀티 에이전트를 구현합니다.
-
-## 5) 평가·모니터링 *(추가 예정)*
-- Playground **Evaluation**, 사용량/오류 모니터링 및 알림 구성을 포함할 예정입니다.
+## ✅ 사전 준비
+- Azure 구독 및 Resource Group Owner 권한  
+- Azure OpenAI 서비스 사용 승인 (지원 리전)  
+- Visual Studio Code + Azure Tools 확장 (선택)  
+- 기본 Azure Portal 사용 경험  
 
 ---
 
-## Troubleshooting
-- MI 검증 실패: 리소스 MI 활성화, RBAC 재확인, Search **API access control = Role-based/Both**로 설정합니다.  
-- SAS + Key 비활성화 충돌: 데이터스토어를 **Identity 기반**으로 전환합니다.  
-- On Your Data 리전 오류: **지원 리전**의 Azure OpenAI 리소스를 사용합니다.  
-- 웹앱 401/403: 웹앱 MI에 `Cognitive Services OpenAI User` 역할을 부여합니다.
+이 과정을 통해 참가자는 **Azure AI Foundry에서의 데이터-에이전트-관찰성 파이프라인**을 엔드투엔드로 경험할 수 있습니다.
