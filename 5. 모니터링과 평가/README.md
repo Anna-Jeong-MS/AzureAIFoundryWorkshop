@@ -12,6 +12,17 @@ Azure AI Foundry 프로젝트에서 Application Insights를 프로젝트에 연�
 
 이후 추적 기능을 활용하면 모니터링 기본 대시보드에서 기간/모델/애플리케이션 필터를 적용해 지표를 확인하고, 이상 징후가 보이면 추적으로 이동해 세부 호출 흐름을 디버깅합니다. 필요 시 **View in Azure Monitor Application Insights**로 넘어가 KQL로 심층 분석 및 워크북 커스터마이징/공유를 수행할 수 있습니다.
 
+애플리케이션 분석에서 수집되는 데이터는 아래와 같습니다.
+
+| 범주 | 예시 항목 | 전송 조건 |
+| --- | --- | --- |
+| **요청(Requests)** | REST API/에이전트 호출 수, 응답 시간, 상태 코드(200/400/500) | SDK, OpenTelemetry, 또는 Azure Monitor에 Request Telemetry를 보내야 합니다. |
+| **종속성(Dependencies)** | 백엔드 호출 (예: DB 쿼리, 스토리지 요청) | 코드 또는 Agent 실행 경로에서 Dependency Telemetry를 수집하도록 설정해야 합니다. |
+| **예외(Exceptions)** | 호출 오류, 런타임 예외 | 예외 로깅 또는 TrackException 호출 필요 |
+| **추적/로그(Traces)** | 사용자 정의 로그, 단계별 메시지 | Application Insights SDK/Logger를 사용하여 TrackTrace 또는 Logger 전송 |
+| **사용자/세션(User/Session)** | 사용자 수, 세션 수, 지역별 분포 | Web SDK 또는 클라이언트 쪽 Telemetry가 활성화돼야 집계 |
+| **커스텀 이벤트(Custom Events & Metrics)** | 비즈니스 이벤트, 커스텀 카운터 | TrackEvent, TrackMetric 등을 통해 수동 전송 |
+
 1. 브라우저에서 **Azure AI Foundry 포털 탭**으로 이동합니다.
 2. 왼쪽 메뉴에서 `모니터링`을 클릭합니다.
 3. Application Insight 리소스 이름 하단의 `새로 만들기` 버튼을 클릭합니다.
@@ -19,8 +30,34 @@ Azure AI Foundry 프로젝트에서 Application Insights를 프로젝트에 연�
     ![image.png](./images/image.png)
     
 4. 이름에 `Agent-ApplicationInsights`를 입력하고 `만들기` 버튼을 클릭합니다.
-5. 모니터링 데이터를 쌓기 위해 왼쪽 메뉴에서 `플레이그라운드`를 선택합니다.
-6. 에이전트 플레이그라운드에서 `FundRecommendationAgent`를 선택하고 아래 프롬프트들을 실행합니다.
+
+※ 단순히 Azure AI Foundry 에이전트를 호출하는 것만으로는 **자동으로 Application Insights로 기록되지 않습니다**. Agent 호출 결과가 Azure Monitor에 Forward되려면, Foundry에서 **Observability 연결**이 활성화되어 있어야 합니다.
+
+**진단 설정 구성**
+
+1. 브라우저에서 새 탭을 열어 [Azure Portal](https://portal.azure.com)에 접속합니다.
+2. 상단 검색창에서 `AI Foundry`를 입력해 **AI Foundry 화면**으로 이동합니다.
+3. 왼쪽 메뉴에서 `AI Foundry` 를 클릭합니다.
+    
+    ![image.png](./images/image%201.png)
+    
+4. 리스트에서 생성한 `<alias>-project-resource`를 클릭합니다.
+5. 왼쪽 메뉴에서 `모니터링 > 진단 설정`을 클릭합니다.
+6. 아래와 같이 구성 후 `저장` 버튼을 클릭합니다.
+    
+    ![image.png](./images/image%202.png)
+    
+    - 진단 설정 이름 : AIFoundryLogs
+    - 로그 : Audit / allLogs
+    - 메트릭 : AllMetrics
+    - 대상 세부 정보
+        - Log Analytics 작업 영역에 보내기
+
+**모니터링 구성 확인**
+
+1. 브라우저에서 `Azure AI Foundry 탭`으로 이동합니다.
+2. 모니터링 데이터를 쌓기 위해 왼쪽 메뉴에서 `플레이그라운드`를 선택합니다.
+3. 에이전트 플레이그라운드에서 `FundRecommendationAgent`를 선택하고 아래 프롬프트들을 실행합니다.
     
     ```
     40대 VIP 등급 코드 07이고 단기연체여부(6M)=0인 사용자에게 적합한 글로벌 성장형 펀드를 추천해줘.
@@ -55,13 +92,53 @@ Azure AI Foundry 프로젝트에서 Application Insights를 프로젝트에 연�
 
 ### 애플리케이션 성능 평가 및 비교
 
+Azure AI Foundry에서는 AI 품질 평가를 위해 **모델 레이블 지정자, 모델 채점자**뿐만 아니라 **문자열 검사, 텍스트 유사성, 안전·윤리적 콘텐츠 검증**을 위한 다양한 평가자를 제공합니다.
+
+생성한 **FundRecommendationAgent**를 평가하기 위해 **Likert 배율 계산기**를 활용해보도록 하겠습니다.
+
+Likert 배율 계산기는 사람이 응답의 품질을 **1점(매우 나쁨)에서 5점(매우 좋음)**과 같은 척도로 평가할 수 있도록 하여, **정성적인 판단을 정량화**하는 역할을 합니다. 이를 통해 응답의 관련성, 설득력, 신뢰성을 수치로 비교·분석할 수 있습니다.
+
+그렇기 때문에 **정답이 하나로 고정되지 않고 여러 대안이 존재할 수 있는 금융상품 추천 시나리오**에서는, 사람의 직관적 판단을 반영한 품질 측정이 가능해져 **FundRecommendationAgent 평가에 특히 적합합니다.**
+
 1. 왼쪽 메뉴에서 `평가`을 클릭합니다.
 2. 생성형 AI 솔루션 평가에서 `새 평가 만들기`를 클릭합니다.
 3. 현재 **모델 평가**와 **기존 쿼리-응답 데이터 세트 평가**를 사용할 수 있습니다.
-    - 모델 평가 : ㅇㅇ
-    - 기존 쿼리-응답 데이터 세트 평가 : ㅐㅐ
+    - `모델 평가` : 모델 그 자체의 성능을 다양한 프롬프트/지표로 확인
+    - `기존 쿼리-응답 데이터 세트 평가` : 
+    준비된 Q/A 데이터셋과 실제 결과를 비교해 **서비스 품질**을 측정
 4. `기존 쿼리-응답 데이터 세트 평가`를 선택하고 `다음` 버튼을 클릭합니다.
-5. **테스트 데이터 구성 화면**에서 가장 최근의 데이터를 선택하고 `다음` 버튼을 클릭합니다.
+5. **테스트 데이터 구성 화면**에서 `새 데이터 세트 업로드` 버튼을 클릭합니다.
+6. 다운로드 받은 `fund_products_eval_sample.jsonl`를 선택합니다.
+7. 데이터 세트 업로드가 완료되면 `다음` 버튼을 클릭합니다.
+8. **평가자 구성 화면**에서 테스트 조건 아래에 `추가` 버튼을 클릭합니다.
+9. `Likert 배율 계산기`를 선택합니다.
+    
+    ![image.png](./images/image%203.png)
+    
+
+1. Likert 배율 계산기를 아래와 같이 구성합니다.
+    
+    ![image.png](./images/image%204.png)
+    
+    - 조건 이름 : FundRec_Likert_v1
+    - 사전 설정 : 근거성
+    - 다음으로 등급 지정 : gpt-4o (프로젝트에 배포된)
+    - 컨텍스트 : {{item.context}}
+    - 쿼리 : {{item.query}}
+    - 응답 : {{item.response}}
+    - 통과 등급 : 3
+2. 구성이 완료되면 `추가` 버튼을 클릭하고 화면 하단의 `다음` 버튼을 클릭합니다.
+3. 모든 구성이 완료되면 `제출` 버튼을 클릭합니다.
+    
+    ![image.png](./images/image%205.png)
+    
+
+1. 평가가 완료되면 다음과 같이 평가 결과를 확인할 수 있습니다.
+    
+    ![image.png](./images/image%206.png)
+    
+    ![image.png](./images/image%207.png)
+    
 
 **연속 평가 구성**
 
