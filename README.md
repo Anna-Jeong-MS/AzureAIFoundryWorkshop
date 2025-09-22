@@ -61,3 +61,6 @@
 ---
 
 이 과정을 통해 참가자는 **Azure AI Foundry에서의 데이터-에이전트-관찰성 파이프라인**을 엔드투엔드로 경험할 수 있습니다.
+
+---
+작성자: [annajeong@microsoft.com](mailto:annajeong@microsoft.com) · 본 문서는 출처를 명시할 경우 자유롭게 재활용할 수 있습니다.
