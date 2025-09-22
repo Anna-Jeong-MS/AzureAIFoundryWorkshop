@@ -1,4 +1,4 @@
-# Azure AI Foundry Workshop
+# 🚀 Azure AI Foundry Workshop
 
 이 워크샵은 **Azure AI Foundry**를 활용하여 실제 기업 환경에서 생성형 AI 애플리케이션을 어떻게 설계·구현·운영할 수 있는지를 엔드투엔드로 체험할 수 있도록 구성되었습니다.  
 
